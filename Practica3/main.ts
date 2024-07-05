@@ -13,8 +13,7 @@ import { deleteAllCharFromDB } from "./deleteallchar.ts";
 const env = await load();
 //const URL_MONGO = "mongodb+srv://rcbusd:315raqHkLSJHekZl@arquitecturaysistemas.qpexaci.mongodb.net/extraordianrio?retryWrites=true&w=majority&appName=ArquitecturaySistemas"
 
-const URL_MONGO = env.MONGO_URL || Deno.env.get("MONGO_URL") || "red"
-
+const URL_MONGO = env.MONGO_URL || Deno.env.get("URL_MONGO")
 if(!URL_MONGO){
   console.error("Debes definir la variable URL_MONGO")
   Deno.exit(1)
