@@ -1,0 +1,49 @@
+import mongoose from "npm:mongoose@7.6.3";
+import { LocationModel } from "./mongoosedata.ts"; 
+import {load} from "https://deno.land/std@0.204.0/dotenv/mod.ts"
+
+// Función para obtener una ubicación por su ID
+export async function getLocationById(id: number) {
+  try {
+    const location = await LocationModel.findOne({ id }).exec();
+
+    if (location) {
+      return location.toObject();
+    } else {
+      console.log(`Ubicación con ID ${id} no encontrada en la base de datos.`);
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error al obtener la ubicación de la base de datos: ${error}`);
+    return null;
+  }
+}
+
+export async function agregarUbicacion(location: Location1) {
+    const env = await load();
+    const URL_MONGO = env.MONGO_URL || Deno.env.get("MONGO_URL")
+
+    if(!URL_MONGO){
+        console.error("Debes definir la variable URL_MONGO")
+        Deno.exit(1)
+    }
+    console.info(URL_MONGO)
+    try {
+    if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(URL_MONGO); 
+    }
+
+    const newLocation = new LocationModel({
+        id: location.id,
+        location: location.location,
+        created: location.created,
+    });
+
+    await newLocation.save();
+
+    console.log("Ubicación añadida a la base de datos.");
+    } catch (error) {
+        console.error(`Error al agregar la ubicación a la base de datos: ${error}`);
+    }
+}
+
